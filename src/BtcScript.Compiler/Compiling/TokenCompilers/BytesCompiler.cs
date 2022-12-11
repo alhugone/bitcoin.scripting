@@ -2,34 +2,35 @@ namespace BtcScript.Compiler.Compiling.TokenCompilers;
 
 public class BytesCompiler : ITokenCompiler<byte[]>
 {
-    public byte[] ToByteCode(byte[] number)
+    public byte[] ToByteCode(byte[] value)
     {
+        const int maxPrefixBytes = 5;
         if (BitConverter.IsLittleEndian == false)
-            throw new Exception("Not Little endian");
-        var list = new List<byte>(number.Length);
-        switch (number.Length)
+            throw new PlatformNotSupportedException("Current CPU Architecture is not Not Little endian based.");
+        var list = new List<byte>(value.Length + maxPrefixBytes);
+        switch (value.Length)
         {
             case < (int)OpCodeType.OP_PUSHDATA1:
-                list.Add((byte)number.Length);
+                list.Add((byte)value.Length);
                 break;
-            case <= 0xff:
+            case <= 0xFF:
                 list.Add((byte)OpCodeType.OP_PUSHDATA1);
-                list.Add((byte)number.Length);
+                list.Add((byte)value.Length);
                 break;
-            case <= 0xffff:
+            case <= 0xFFFF:
             {
                 list.Add((byte)OpCodeType.OP_PUSHDATA2);
-                list.AddRange(BitConverter.GetBytes((short)number.Length));
+                list.AddRange(BitConverter.GetBytes((short)value.Length));
                 break;
             }
             default:
             {
                 list.Add((byte)OpCodeType.OP_PUSHDATA4);
-                list.AddRange(BitConverter.GetBytes(number.Length));
+                list.AddRange(BitConverter.GetBytes(value.Length));
                 break;
             }
         }
-        list.AddRange(number);
+        list.AddRange(value);
         return list.ToArray();
     }
 }

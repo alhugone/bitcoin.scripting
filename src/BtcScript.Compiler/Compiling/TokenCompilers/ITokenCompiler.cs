@@ -2,5 +2,5 @@ namespace BtcScript.Compiler.Compiling.TokenCompilers;
 
 public interface ITokenCompiler<in T>
 {
-    byte[] ToByteCode(T number);
+    byte[] ToByteCode(T value);
 }

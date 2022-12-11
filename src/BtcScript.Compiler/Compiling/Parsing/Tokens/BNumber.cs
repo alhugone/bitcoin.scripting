@@ -15,8 +15,7 @@ public class BNumber : BToken
 
     public long Value { get; }
 
-
-    public static bool TryParse(string @string,[NotNullWhen(true)] out BNumber? number)
+    public static bool TryParse(string @string, [NotNullWhen(true)] out BNumber? number)
     {
         if (!IsNumber(@string))
         {
@@ -27,5 +26,5 @@ public class BNumber : BToken
         return true;
     }
 
-    private static bool IsNumber(string token) => Regex.IsMatch(token, "-?[0-9]+");
+    private static bool IsNumber(string token) => Regex.IsMatch(token, "^-?[0-9]+$");
 }

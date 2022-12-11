@@ -6,7 +6,7 @@ namespace BtcScript.Compiler.Compiling.TokenCompilers;
 public class BHexCompiler : ITokenCompiler<BHex>
 {
     internal const string HexPrefix = "0x";
-    public byte[] ToByteCode(BHex number) => Serialize(number.Value);
+    public byte[] ToByteCode(BHex value) => Serialize(value.Value);
 
     internal static byte[] Serialize(string value)
     {

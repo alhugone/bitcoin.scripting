@@ -4,17 +4,19 @@ namespace BtcScript.Compiler.Compiling.Parsing.Tokens;
 
 public class BString : BToken
 {
-    public BString(string @string) => Value = @string;
+    public BString(string @string) =>
+        Value = IsString(@string) ? @string.Trim('\'') : throw ParsingException.NotString(@string);
+
     public string Value { get; }
 
-    public static bool TryParse(string token, [NotNullWhen(true)] out BString? bstring)
+    public static bool TryParse(string token, [NotNullWhen(true)] out BString? bString)
     {
-        bstring = null;
+        bString = null;
         if (!IsString(token))
             return false;
-        bstring = new BString(token);
+        bString = new BString(token);
         return true;
     }
 
-    internal static bool IsString(string token) => (token.StartsWith("'") && token.EndsWith("'"));
+    internal static bool IsString(string token) => token.Length > 2 && token.StartsWith("'") && token.EndsWith("'");
 }

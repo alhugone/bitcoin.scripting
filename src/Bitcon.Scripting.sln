@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BtcScript.Compiler", "BtcSc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BtcScript.Compiler.Tests", "BtcScript.Compiler.Tests\BtcScript.Compiler.Tests.csproj", "{127984CA-E33E-4327-B73C-5721BB94AF59}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scripting.Engine", "Scripting.Engine\Scripting.Engine.csproj", "{32D10C22-38B4-4668-9CD1-1969D7A04E42}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +40,10 @@ Global
 		{127984CA-E33E-4327-B73C-5721BB94AF59}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{127984CA-E33E-4327-B73C-5721BB94AF59}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{127984CA-E33E-4327-B73C-5721BB94AF59}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32D10C22-38B4-4668-9CD1-1969D7A04E42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32D10C22-38B4-4668-9CD1-1969D7A04E42}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32D10C22-38B4-4668-9CD1-1969D7A04E42}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32D10C22-38B4-4668-9CD1-1969D7A04E42}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{A45ECB24-003D-4F3E-9262-302142654520} = {C3B06DA0-DEC6-4EB3-940C-0116728565D0}

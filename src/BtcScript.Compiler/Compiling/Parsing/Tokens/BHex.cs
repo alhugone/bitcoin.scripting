@@ -7,7 +7,7 @@ public class BHex : BToken
 {
     public BHex(string hexString)
     {
-        if (IsHexString(hexString))
+        if (!IsHexString(hexString))
             throw ParsingException.NotHexString(hexString);
         Value = hexString;
     }
@@ -15,7 +15,7 @@ public class BHex : BToken
     public string Value { get; }
 
     public static bool IsHexString(string hexString) =>
-        hexString.Length % 2 != 0 || !Regex.IsMatch(
+        hexString.Length % 2 == 0 && Regex.IsMatch(
             hexString,
             "^(0x){1}([a-f0-9]{2})+$",
             RegexOptions.IgnoreCase
