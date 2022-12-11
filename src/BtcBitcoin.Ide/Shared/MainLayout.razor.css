@@ -1,0 +1,26 @@
+.md-logo > img {
+    width: 1.5rem;
+    height: fit-content;
+    display: inline;
+    vertical-align: text-bottom;
+}
+
+.md-logo {
+    margin-top: -1rem; 
+}
+
+@media (max-width: 1200px) {
+    .md-logo {
+        margin-left: calc(1.275rem + 30vw)
+    }
+}
+@media (min-width: 1200px) {
+    .md-logo {
+        margin-left: 18rem;
+    }
+}
+
+.btc-color {
+    color: #f2a900;
+    font-weight: 900;
+}

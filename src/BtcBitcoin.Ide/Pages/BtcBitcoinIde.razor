@@ -1,0 +1,129 @@
+﻿@page "/btc-bitcoin/ide"
+@page "/"
+@using BtcScript.Compiler.Compiling
+@using Scripting.Engine
+@using Scripting.Engine.BStacks
+
+<PageTitle>BTC Bitcoin Script IDE / debbuger</PageTitle>
+
+<div class="alert alert-info" role="alert">
+    Application is still under development.
+</div>
+
+<form class="row g-7">
+    <div class="col-6">
+        <label for="script" class="form-label">Script</label>
+        <textarea id="script" type="text" class="form-control" @onchange="OnScriptChanged" placeholder="200 10 ADD 210 EQUAL"></textarea>
+    </div>
+    <div class="col-auto">
+        Sample scripts:
+        <ul>
+            <li>
+                <code>200 10 ADD 210 EQUAL</code>
+            </li>
+            <li>
+                <code>0 10 SUB</code>
+            </li>
+            <li>
+                <code>30 2 ADD 10 SUB 30 ADD</code>
+            </li>
+        </ul>
+    </div>
+</form>
+<form class="">
+    <div class="row ">
+        <div class="col-6">
+            Compiled script:
+            <ul>
+                <li><code>ASM</code>: @_asm</li>
+                <li><code>ASM Grouped</code>: @_asmGrouped</li>
+                <li><code>HEX Grouped</code>: @_hexGrouped</li>
+                <li><code>HEX</code>: @_hex</li>
+                <li><code>Total bytes</code>: @_byteCode.Length</li>
+                <li><code>Max P2SH bytes</code>: 520</li>
+            </ul>
+        </div>
+        <div class="col-auto">
+             Execution Stack:
+                <ul>
+                    @if (_engine is not null)
+                    {
+                        @foreach (var item in _engine.Stack)
+                        {
+                            <li>@Convert.ToHexString(item.ToArray())</li>
+                        }
+                    }
+                </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-3">
+             Script Result:
+                <ul>
+                    @if (_engine?.Completed == true)
+                    {
+                        <li>Evaluated to: @_engine.Result?.ToString()</li>
+                        @if (_engine?.Error is not null)
+                        {
+                            <li>Script failed reason: @_engine.Error?.Message</li>
+                        }
+                    }
+                    @if (_engine?.Completed == false)
+                    {
+                        <li>Not yet completed</li>
+                    }
+                </ul>
+        </div>
+    <div class="col-auto">
+    <p>
+        <label for="nextInstruction">Next Instruction</label>
+        <input id="nextInstruction" type="text" readonly value="@_engine?.NextInstruction"/>
+        <button @onclick="OnNextInvoked" disabled="@_engine?.Completed" class="btn btn-primary">Invoke Next</button>
+        <button @onclick="OnUndoLastInvoked" class="btn btn-secondary">Undo Last</button>
+    </p>
+    </div>
+    </div>
+
+
+
+
+
+
+</form>
+@code {
+    private readonly BScriptCompiler _scriptCompiler = BScriptCompilerFactory.GetDefault();
+    private readonly OpCodeDecoder _opCodeDecoder = OpCodeDecoderFactory.GetDefault();
+    private string _asm = "";
+    private string _asmGrouped = "";
+    private string _hex = "";
+    private string _hexGrouped = "";
+    private IReadOnlyList<OpCodeDecodedInstruction> _decodedOpcodes = new List<OpCodeDecodedInstruction>();
+    private BScriptEngineV3 _engine = BuildBScriptEngineFactory.BuildBScriptEngineV3(new BStack());
+    private byte[] _byteCode = Array.Empty<byte>();
+
+    private void ReCompile(string scriptCode)
+    {
+        _byteCode = _scriptCompiler.Compile(scriptCode).ToArray();
+        _decodedOpcodes = _opCodeDecoder.DecodeAll(_byteCode);
+        _asm = string.Join(" ", _decodedOpcodes);
+        _asmGrouped = string.Join(" ", _decodedOpcodes.Select(x => "[" + x + "]"));
+        _hex = Convert.ToHexString(_byteCode);
+        _hexGrouped = string.Join(" ", _decodedOpcodes.Select(x => "[" + x.ToHex() + "]"));
+        _engine = BuildBScriptEngineFactory.BuildBScriptEngineV3(new BStack());
+        _engine.SetScript(scriptCode);
+    //_engine.ExecuteAll();
+    }
+
+    private void OnScriptChanged(ChangeEventArgs obj) => ReCompile(obj?.Value?.ToString() ?? "");
+
+    private void OnNextInvoked()
+    {
+        _engine.ExecuteNext();
+    }
+
+    private void OnUndoLastInvoked()
+    {
+        _engine.UndoLast();
+    }
+
+}
